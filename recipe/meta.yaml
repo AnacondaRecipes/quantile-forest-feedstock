@@ -1,0 +1,48 @@
+{% set name = "quantile-forest" %}
+{% set version = "1.1.2" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/quantile-forest-{{ version }}.tar.gz
+  sha256: 08bc4d733486292ae75c239dedc27723291e751d82fe8f372528ee043a608086
+
+build:
+  script: {{ PYTHON }} -m pip install . -vv
+  number: 0
+
+requirements:
+  host:
+    - python
+    - cython >=3.0a4
+    - numpy >=1.23
+    - scipy >=1.4
+    - scikit-learn >=1.0
+    - pip
+    - setuptools
+    - wheel
+  run:
+    - python
+    - numpy >=1.23
+    - scipy >=1.4
+    - scikit-learn >=1.0
+
+test:
+  imports:
+    - quantile_forest
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  home: https://github.com/zillow/quantile-forest
+  summary: scikit-learn compatible quantile forests.
+  license: Apache-2.0
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - skupr-anaconda
