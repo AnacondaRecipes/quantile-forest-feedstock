@@ -37,8 +37,10 @@ test:
     - quantile_forest
   requires:
     - pip
+    - pytest
   commands:
     - pip check
+    - python -m pytest --pyargs quantile_forest
 
 about:
   home: https://github.com/zillow/quantile-forest
