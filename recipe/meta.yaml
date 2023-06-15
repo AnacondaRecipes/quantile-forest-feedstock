@@ -6,41 +6,55 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/quantile-forest-{{ version }}.tar.gz
-  sha256: 08bc4d733486292ae75c239dedc27723291e751d82fe8f372528ee043a608086
+  # Looks like the source code of v1.1.2 from PyPi is broken: file quantile_forest/version.txt cannot be found.
+  url: https://github.com/zillow/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: f2536c21797fde6ffffdb770e04d276d689de569ff40824361e52ad75b7fa97e
 
 build:
-  script: {{ PYTHON }} -m pip install . -vv
   number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
+  build:
+    - {{ compiler('cxx') }}
   host:
     - python
-    - cython >=3.0a4
-    - numpy >=1.23
-    - scipy >=1.4
-    - scikit-learn >=1.0
+    - cython 0.29.33
+    - numpy {{ numpy }}
     - pip
+    - scikit-learn 1.2.2
+    - scipy 1.10.1
     - setuptools
     - wheel
   run:
     - python
     - numpy >=1.23
-    - scipy >=1.4
     - scikit-learn >=1.0
+    - scipy >=1.4
 
 test:
   imports:
     - quantile_forest
-  commands:
-    - pip check
   requires:
     - pip
+    - pytest
+  commands:
+    - pip check
+    - python -m pytest --pyargs quantile_forest
 
 about:
   home: https://github.com/zillow/quantile-forest
+  dev_url: https://github.com/zillow/quantile-forest
+  doc_url: https://github.com/zillow/quantile-forest
   summary: scikit-learn compatible quantile forests.
+  description: |
+    quantile-forest offers a Python implementation of quantile regression forests compatible with scikit-learn.
+    Quantile regression forests are a non-parametric, tree-based ensemble method for estimating conditional quantiles, 
+    with application to high-dimensional data and uncertainty estimation. 
+    The estimators in this package extend the forest estimators available in scikit-learn to estimate conditional quantiles. 
+    They are compatible with and can serve as drop-in replacements for the scikit-learn variants.
   license: Apache-2.0
+  license_family: Apache
   license_file: LICENSE
 
 extra:
